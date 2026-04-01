@@ -1,0 +1,4 @@
+selenium==4.18.1
+pytest==8.2.0
+allure-pytest==2.13.5
+seletools==1.5.0
