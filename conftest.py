@@ -4,8 +4,8 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.support.ui import WebDriverWait
 
-#@pytest.fixture(params=['chrome', 'firefox'])
-@pytest.fixture(params=['chrome'])
+
+@pytest.fixture(params=['chrome', 'firefox'])
 def driver(request):
     browser = request.param
 

@@ -1,11 +1,7 @@
 import allure
 
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
 from constants import MAIN_URL
 from page_objects.main_page import MainPage
-from page_objects.modal_locators import ModalLocators
 from page_objects.order_page import OrderPage
 
 @allure.suite('Основная функциональность')
@@ -17,14 +13,14 @@ class TestConstructor:
         page.open()
         page.click_constructor()
 
-        assert driver.current_url == MAIN_URL
+        assert page.get_current_url() == MAIN_URL
 
     @allure.title('Переход по клику на «Лента Заказов»')
     def test_click_feed_navigates_to_feed(self, driver):
         page = MainPage(driver)
         page.open()
         page.click_feed()
-        assert '/feed' in driver.current_url
+        assert '/feed' in page.get_current_url()
 
     @allure.title('Клик на ингредиент открывает модальное окно с деталями')
     def test_click_ingredient_opens_modal(self, driver):
@@ -38,7 +34,7 @@ class TestConstructor:
         page = MainPage(driver)
         page.open()
         page.click_first_ingredient()
-        title = page._wait.until(EC.visibility_of_element_located(ModalLocators.MODAL_TITLE))
+        title = page.get_modal_window_title()
         assert 'Детали ингредиента' in title.text
 
     @allure.title('Модальное окно закрывается кликом по крестику')
@@ -55,13 +51,13 @@ class TestConstructor:
         page = MainPage(driver)
         page.open()
 
-        ingredient = wait.until(EC.presence_of_element_located(MainPage.INGREDIENT_CARD))
-        counter_before = int(ingredient.find_element(*MainPage.INGREDIENT_COUNTER).text)
+        ingredient = page.get_ingredient()
+        counter_before = page.get_ingredient_counter(ingredient)
 
         order_page.add_first_ingredient()
 
         order_page.wait_for_counter_to_increase(ingredient, counter_before)
 
-        counter_after = int(ingredient.find_element(*MainPage.INGREDIENT_COUNTER).text)
+        counter_after = page.get_ingredient_counter(ingredient)
 
         assert counter_after > counter_before

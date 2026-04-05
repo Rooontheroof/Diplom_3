@@ -1,7 +1,5 @@
 import allure
 
-from selenium.webdriver.common.by import By
-
 from page_objects.login_page import LoginPage
 from page_objects.main_page import MainPage
 from page_objects.feed_page import FeedPage
@@ -27,9 +25,8 @@ class TestOrderFeed:
         order_page.make_order()
 
         feed.open()
-        driver.refresh()
-
-        main._wait.until(lambda d: feed.get_counter_all_time() > counter_before)
+        feed.refresh()
+        feed.wait_until_counter_all_time_updated(counter_before)
 
         counter_after = feed.get_counter_all_time()
         assert counter_after > counter_before
@@ -51,9 +48,9 @@ class TestOrderFeed:
         order_page.make_order()
 
         feed.open()
-        driver.refresh()
+        feed.refresh()
 
-        main._wait.until(lambda d: feed.get_counter_today() > counter_before)
+        feed.wait_until_counter_today_updated(counter_before)
 
         counter_after = feed.get_counter_today()
         assert counter_after > counter_before
@@ -72,6 +69,6 @@ class TestOrderFeed:
         order_number = order_page.make_order()
 
         feed.open()
-        driver.refresh()
+        feed.refresh()
 
         assert order_page.wait_for_order_in_progress(order_number), f'Номер заказа {order_number} не появился в «В работе»'
